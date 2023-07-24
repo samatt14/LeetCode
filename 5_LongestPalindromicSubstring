@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+
+	    //use dynamic programming table
+	    bool dp[s.length()][s.length()];
+
+	    //initialize to 0
+	    memset(dp, 0, sizeof(dp));
+
+	    int longestPalindromLength = 1;
+        int start = 0;
+
+	    //set the values of all substrings of length 1 (the numbers on the diagonal) to True in dp table 
+	    for (int i = 0; i < s.length(); i++){
+		    dp[i][i] = true;
+	    }
+
+	    //try to find palindroms of length 2
+	    for (int j = 0; j < s.length() - 1; j++){
+		    if (s[j] == s[j + 1]){
+			    dp[j][j + 1] = true;
+			    start = j;
+			    longestPalindromLength = 2;
+		    }
+	    }
+	    
+        //now check palindroms 3 and longer
+	    for (int k = 3; k <= s.length(); ++k) {
+            for (int i = 0; i < s.length() - k + 1; ++i) {
+                //get end index
+                int j = i + k - 1;
+ 
+                //check if substring from start to j (end) is a palindrom
+                if (dp[i + 1][j - 1] && s[i] == s[j]) {
+                    dp[i][j] = true;
+
+				    //if a longer palindrom has been found, update longest length
+                    if (k > longestPalindromLength) {
+                        start = i;
+                        longestPalindromLength = k;
+                    }
+                }
+            }
+        }
+
+        return s.substr(start, longestPalindromLength);
+    }
+};
